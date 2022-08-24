@@ -14,6 +14,78 @@ var specialSymbolsArray = []string{"~", "!", "&", "?", ",", ":", "-", "_", "<", 
 var symbols = []string{"q", "w", "e", "r", "t", "y", "u", "i", "o", "p", "a", "s", "d", "f", "g", "h", "j", "k", "l",
 	"z", "x", "c", "v", "b", "n", "m"}
 
+func removeFromSlice(arrayPointer *[]string, array []string, index int) {
+	*arrayPointer = append(array[:index], array[index+1:]...)
+}
+
+func findIndexOfElementInSlice(array []string, el string) int {
+	result := -1
+	for i := 0; i < len(array); i++ {
+		if array[i] == el {
+			result = i
+			break
+		}
+	}
+	return result
+}
+
+func clearByNumber(number string) {
+	if number == "1" {
+		index := findIndexOfElementInSlice(numbersArray, number)
+		if index > -1 {
+			removeFromSlice(&numbersArray, numbersArray, index)
+		}
+
+		index = findIndexOfElementInSlice(symbols, "l")
+		if index > -1 {
+			removeFromSlice(&symbols, symbols, index)
+		}
+	}
+
+	if number == "0" {
+		index := findIndexOfElementInSlice(numbersArray, number)
+		if index > -1 {
+			removeFromSlice(&numbersArray, numbersArray, index)
+		}
+
+		index = findIndexOfElementInSlice(symbols, "o")
+		if index > -1 {
+			removeFromSlice(&symbols, symbols, index)
+		}
+	}
+}
+
+func clearByLetter(letter string) {
+	if letter == "l" || letter == "i" {
+		index := findIndexOfElementInSlice(numbersArray, "1")
+		if index > -1 {
+			removeFromSlice(&numbersArray, numbersArray, index)
+		}
+
+		index = findIndexOfElementInSlice(symbols, "l")
+		if index > -1 {
+			removeFromSlice(&symbols, symbols, index)
+		}
+
+		index = findIndexOfElementInSlice(symbols, "i")
+		if index > -1 {
+			removeFromSlice(&symbols, symbols, index)
+		}
+	}
+
+	if letter == "o" {
+		index := findIndexOfElementInSlice(numbersArray, "0")
+		if index > -1 {
+			removeFromSlice(&numbersArray, numbersArray, index)
+		}
+
+		index = findIndexOfElementInSlice(symbols, letter)
+		if index > -1 {
+			removeFromSlice(&symbols, symbols, index)
+		}
+	}
+}
+
 func main() {
 	resPass := ""
 	defaultLength := 8
@@ -29,7 +101,9 @@ func main() {
 
 	for i := 0; i < defaultLength; i++ {
 		if i%2 == 0 {
-			resPass += symbols[rand.Intn(len(symbols))]
+			symbol := symbols[rand.Intn(len(symbols))]
+			resPass += symbol
+			clearByLetter(symbol)
 			continue
 		}
 		if i%3 == 0 {
@@ -37,9 +111,13 @@ func main() {
 			continue
 		}
 		if i%5 == 0 {
-			resPass += numbersArray[rand.Intn(len(numbersArray))]
+			symbol := numbersArray[rand.Intn(len(numbersArray))]
+			resPass += symbol
+			clearByNumber(symbol)
 		} else {
-			resPass += strings.ToUpper(symbols[rand.Intn(len(symbols))])
+			symbol := symbols[rand.Intn(len(symbols))]
+			resPass += strings.ToUpper(symbol)
+			clearByLetter(symbol)
 		}
 	}
 	fmt.Println(resPass)
